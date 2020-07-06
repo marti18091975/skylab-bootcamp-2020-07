@@ -1,0 +1,620 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script>
+        var index = 0;
+        var partida = 0;
+        var tipus = 1;
+        var preguntesPassadesAL = [];
+        var ronda = 1;
+        var minutsRestants = 9;
+        var totalSegons = 59;
+        
+        var encerts = 0;
+        var errors = 0;
+        var questions = [
+            { letter: "a", answer: "abducir", status: 0, question: "CON LA A. Dicho de una supuesta criatura extraterrestre: Apoderarse de alguien" },
+            { letter: "b", answer: "bingo", status: 0, question: "CON LA B. Juego que ha sacado de quicio a todos los 'Skylabers' en las sesiones de precurso" },
+            { letter: "c", answer: "churumbel", status: 0, question: "CON LA C. Niño, crío, bebé" },
+            { letter: "d", answer: "diarrea", status: 0, question: "CON LA D. Anormalidad en la función del aparato digestivo caracterizada por frecuentes evacuaciones y su consistencia líquida" },
+            { letter: "e", answer: "ectoplasma", status: 0, question: "CON LA E. Gelatinoso y se encuentra debajo de la membrana plasmática. Los cazafantasmas medían su radiación" },
+            { letter: "f", answer: "facil", status: 0, question: "CON LA F. Que no requiere gran esfuerzo, capacidad o dificultad" },
+            { letter: "g", answer: "galaxia", status: 0, question: "CON LA G. Conjunto enorme de estrellas, polvo interestelar, gases y partículas" },
+            { letter: "h", answer: "harakiri", status: 0, question: "CON LA H. Suicidio ritual japonés por desentrañamiento" },
+            { letter: "i", answer: "iglesia", status: 0, question: "CON LA I. Templo cristiano" },
+            { letter: "j", answer: "jabali", status: 0, question: "CON LA J. Variedad salvaje del cerdo que sale en la película 'El Rey León', de nombre Pumba" },
+            { letter: "k", answer: "kamikaze", status: 0, question: "CON LA K. Persona que se juega la vida realizando una acción temeraria" },
+            { letter: "l", answer: "licantropo", status: 0, question: "CON LA L. Hombre lobo" },
+            { letter: "m", answer: "misantropo", status: 0, question: "CON LA M. Persona que huye del trato con otras personas o siente gran aversión hacia ellas" },
+            { letter: "n", answer: "necedad", status: 0, question: "CON LA N. Demostración de poca inteligencia" },
+            { letter: "o", answer: "orco", status: 0, question: "CON LA O. Humanoide fantástico de apariencia terrible y bestial, piel de color verde creada por el escritor Tolkien" },
+            { letter: "p", answer: "protoss", status: 0, question: "CON LA P. Raza ancestral tecnológicamente avanzada que se caracteriza por sus grandes poderes psíonicos del videojuego StarCraft" },
+            { letter: "q", answer: "queso", status: 0, question: "CON LA Q. Producto obtenido por la maduración de la cuajada de la leche" },
+            { letter: "r", answer: "raton", status: 0, question: "CON LA R. Roedor" },
+            { letter: "s", answer: "stackoverflow", status: 0, question: "CON LA S. Comunidad salvadora de todo desarrollador informático" },
+            { letter: "t", answer: "terminator", status: 0, question: "CON LA T. Película del director James Cameron que consolidó a Arnold Schwarzenegger como actor en 1984" },
+            { letter: "u", answer: "unamuno", status: 0, question: "CON LA U. Escritor y filósofo español de la generación del 98 autor del libro 'Niebla' en 1914" },
+            { letter: "v", answer: "vikingos", status: 0, question: "CON LA V. Nombre dado a los miembros de los pueblos nórdicos originarios de Escandinavia, famosos por sus incursiones y pillajes en Europa" },
+            { letter: "w", answer: "sandwich", status: 0, question: "CONTIENE LA W. Emparedado hecho con dos rebanadas de pan entre las cuales se coloca jamón y queso" },
+            { letter: "x", answer: "botox", status: 0, question: "CONTIENE LA X. Toxina bacteriana utilizada en cirujía estética" },
+            { letter: "y", answer: "peyote", status: 0, question: "CONTIENE LA Y. Pequeño cáctus conocido por sus alcaloides psicoactivos utilizado de forma ritual y medicinal por indígenas americanos" },
+            { letter: "z", answer: "zen", status: 0, question: "CON LA Z. Escuela de budismo que busca la experiencia de la sabiduría más allá del discurso racional" },
+        ];
+
+        for (let i = 0; i < questions.length; i++) {
+
+            if (questions[i].question[3] === ' ') {
+                questions[i].question = questions[i].question.replace('CON La', 'Empieza por');
+            }
+            else {
+                questions[i].question = questions[i].question.replace('CONTIENE LA', 'Contiene la');
+            }
+
+        }
+        var questionsR = questions.map(item => {
+            return { letter: item.letter, answer: item.answer, status: item.status, question: item.question };
+        });
+
+        var questions2 = [
+            { letter: 'a', answer: 'andy', answered: 0, with: ('Empieza por '), question: ('Nombre del dueño de Woody en Toy Story (Andy)') },
+            { letter: 'b', answer: 'bichos', answered: 0, with: ('Empieza por '), question: ('Película de pixar protagonizada por la hormiga Flik (Bichos)') },
+            { letter: 'c', answer: 'cars', answered: 0, with: ('Empieza por '), question: ('Película de pixar protagonizada por Rayo McQueen (Cars)') },
+            { letter: 'd', answer: 'dexter', answered: 0, with: ('Empieza por '), question: ('Psicópata forense especializado en análisis de salpicaduras de sangre en el Departamento de Policía de Miami. (Dexter)') },
+            { letter: 'e', answer: 'embrujadas', answered: 0, with: ('Empieza por '), question: ('Serie juvenil protagonizada por tres hermanas brujas (Embrujadas)') },
+            { letter: 'f', answer: 'futurama', answered: 0, with: ('Empieza por '), question: ('Serie animada creada por Matt Groening que sigue las aventuras del repartidor de pizzas Philip Fry (Futurama)') },
+            { letter: 'g', answer: 'gunters', answered: 0, with: ('Empieza por '), question: ('Luchan contra los sixers en "Ready Player One" (Gunters)') },
+            { letter: "h", answer: "house", answered: 0, with: ("Empieza por "), question: ("Ególatra genio de la medicina que dirige el departamento de diagnóstico médico del Hospital Universitario Princeton-Plainsboro (House)") },
+            { letter: "i", answer: "iron man", answered: 0, with: ("Empieza por "), question: ("Alter ego de Tony Stark (Iron Man") },
+            { letter: "j", answer: "jabalí", answered: 0, with: ("Empieza por "), question: ("Variedad salvaje del cerdo que sale en la película 'El Rey León', de nombre Pumba (Jabalí)") },
+            { letter: "k", answer: "kilogramos", answered: 0, with: (""), question: ("No nos gusta ganar mas de los necesarios") },
+            { letter: "l", answer: "lost", answered: 0, with: ("Empieza por "), question: ("Serie en la que aparece la Iniciativa Dharma (Lost)") },
+            { letter: "m", answer: "miénteme", answered: 0, with: ("Empieza por "), question: ("Serie basada en la conexión entre los estados emocionales y las expresiones faciales (Miénteme)") },
+            { letter: "n", answer: "narcos", answered: 0, with: ("Empieza por "), question: ("Plata o plomo (Narcos)") },
+            { letter: "ñ", answer: "arguiñano", answered: 0, with: ("Contiene la "), question: ("Apellido del cocinero vasco que adorna todos sus platos con perejil (Arguiñano)") },
+            { letter: "o", answer: "one piece", answered: 0, with: ("Empieza por "), question: ("Serie manga protagonizada por Sombrero de Paja (One piece") },
+            { letter: "p", answer: "payaso", answered: 0, with: ("Empieza por "), question: ("¿Qué tipo de pez es Nemo? (Payaso)") },
+            { letter: "q", answer: "queso", answered: 0, with: ("Empieza por "), question: ("Producto obtenido por la maduración de la cuajada de la leche") },
+            { letter: "r", answer: "rex", answered: 0, with: ("Empieza por "), question: ("Roedor") },
+            { letter: "s", answer: "stackoverflow", with: ("Empieza por "), answered: 0, question: ("Comunidad salvadora de todo desarrollador informático") },
+            { letter: "t", answer: "tintin", with: ("Empieza por "), answered: 0, question: ("Película del director James Cameron que consolidó a Arnold Schwarzenegger como actor en 1984") },
+            { letter: "u", answer: "unamuno", with: ("Empieza por "), answered: 0, question: ("Escritor y filósofo español de la generación del 98 autor del libro 'Niebla' en 1914") },
+            { letter: "v", answer: "verano azul", with: ("Empieza por "), answered: 0, question: ("Nombre dado a los miembros de los pueblos nórdicos originarios de Escandinavia, famosos por sus incursiones y pillajes en Europa") },
+            { letter: "w", answer: "watt", answered: 0, with: ("Empieza por "), question: ("Apellido del inventor de la electricidad") },
+            { letter: "x", answer: "Expediente X", answered: 0, with: ("Empieza por "), question: ("Toxina bacteriana utilizada en cirujía estética") },
+            { letter: "y", answer: "peyote", answered: 0, with: ("Empieza por "), question: ("Pequeño cáctus conocido por sus alcaloides psicoactivos utilizado de forma ritual y medicinal por indígenas americanos") },
+            { letter: "z", answer: "zen", answered: 0, with: ("Empieza por "), question: ("Escuela de budismo que busca la experiencia de la sabiduría más allá del discurso racional") }
+        ];
+
+        var questions2R = questions2.map(item => {
+            return { answer: item.answer, status: item.answered, question: item.question };
+        });
+
+
+        for (let i = 0; i < questions2R.length; i++) {
+            if (i === 24 || i === 25) {
+                questions2R[i].question = `Contiene la ${questions2[i].letter.toUpperCase()}. ${questions2R[i].question}`;
+            } else {
+                questions2R[i].question = `Empieza por ${questions2[i].letter.toUpperCase()}. ${questions2R[i].question}`;
+            }
+        }
+
+        for (n in questions2R) {
+            for (j in questions2R[n].question) {
+                if (questions2R[n].question[j] === '(') {
+                    questions2R[n].question = questions2R[n].question.substr(0, j - 1);
+
+                }
+            }
+        }
+
+        var questions3 = [
+            { letter: "a", question: "Empieza por A: Que no tiene ni dios ni patria ni amo.", answer: "anarquista", doit: false },
+            { letter: "b", question: "Empieza por B: Año que dura 366 días.", answer: "bisiesto", doit: false },
+            { letter: "c", question: "Empieza por C: Sistema de división del tiempo.", answer: "calendario", doit: false },
+            { letter: "d", question: "Empieza por D: Tiempo que la Tierra emplea en dar una vuelta alrededor de su eje, aproximadamente veinticuatro horas.", answer: "día", doit: false },
+            { letter: "e", question: "Empieza por E: País donde nunca se ponía el sol", answer: "españa", doit: false },
+            { letter: "f", question: "Empieza por F: Mes al que se le añade un dia en los años bisiestos.", answer: "febrero", doit: false },
+            { letter: "g", question: "Empieza por G: Papa que da nombre a nuestro calendario actual.", answer: "gregorio", doit: false },
+            { letter: "h", question: "Empieza por H: El orgullo del padre.", answer: "hijo", doit: false },
+            { letter: "i", question: "Empieza por I: Segundo pais del mundo más habitado.", answer: "india", doit: false },
+            { letter: "j", question: "Empieza por J: Fiesta sin fin.", answer: "juerga", doit: false },
+            { letter: "k", question: "Contiene la K: El jabón de lagarto le aguanta la cresta.", answer: "punky", doit: false },
+            { letter: "l", question: "Empieza por A: Monstruo de las profundidades marinas.", answer: "leviatán", doit: false },
+            { letter: "m", question: "Empieza por M: Soso, aburrido.", answer: "muermo", doit: false },
+            { letter: "n", question: "Empieza por N: Que le gustan los muertos.", answer: "necrófilo", doit: false },
+            { letter: "ñ", question: "Contiene la Ñ: Un partido ganado con trampas.", answer: "amañado", doit: false },
+            { letter: "o", question: "Empieza por O: Único mamifero que pone huevos.", answer: "ornitorrinco", doit: false },
+            { letter: "p", question: "Empieza por P: No falta en un plato de Arguiñano", answer: "perejil", doit: false },
+            { letter: "q", question: "Empieza por Q: Arder, combustionar.", answer: "quemar", doit: false },
+            { letter: "r", question: "Empieza por R: Se rompen o se cumplen.", answer: "reglas", doit: false },
+            { letter: "s", question: "Contiene la S: Peor que malo.", answer: "pésimo", doit: false },
+            { letter: "t", question: "Empieza por T: Para algunos existe.", answer: "teruel", doit: false },
+            { letter: "u", question: "Empieza por U: Dícese del que es muy de ciudad.", answer: "urbanita", doit: false },
+            { letter: "v", question: "Empieza por V: Contrario de cobarde.", answer: "valiente", doit: false },
+            { letter: "w", question: "Empieza por W: La cama en el techo de las furgonetas.", answer: "westfalia", doit: false },
+            { letter: "x", question: "Contiene la X: El que tiene el oficio de disecar.", answer: "taxidermista", doit: false },
+            { letter: "y", question: "Empieza por Y: La marca del diapasón.", answer: "yamaha", doit: false },
+            { letter: "z", question: "Empieza por Z: Duro de mollera.", answer: "zoquete", doit: false }];
+        var questions3R = questions3.map(item => {
+            return { answer: item.answer, question: item.question, status: item.doit };
+        });
+        for (let i = 0; i < questions3R.length; i++) {
+            questions3R[i].status = 0;
+            questions3R[i].question = questions3R[i].question.replace(':', '.');
+        }
+        var questionsGroup = questions.map(item2 => {
+            return { letter: item2.letter };
+        });
+        for (n in questionsGroup) {
+            questionsGroup[n].questionsA = [];
+            questionsGroup[n].questionsA[0] = questionsR[n];
+            questionsGroup[n].questionsA[1] = questions2R[n];
+            questionsGroup[n].questionsA[2] = questions3R[n];
+        }
+    </script>
+    <style>
+        body {
+            padding:10px;
+            display: flex;
+            justify-content:space-between;
+            background-color:tomato;
+            width: 1500px;
+            height:680px;
+        }
+        
+        m{
+            display:flex;
+            justify-content:space-between;
+            padding:5px;
+            width:350px;
+            height:100px;
+            margin-top:50px;
+           
+         }
+        .circle-container {
+            background-color:cadetblue;
+            font-size: 40px;
+            text-align: center;
+            line-height:600px;
+            position: relative;
+            width: 800px;
+            height: 600px;
+            padding: 0em;            
+            border: solid 1px;
+            border-radius: 50%;
+            margin-top:30px;
+            font-size:40px;
+            font-family:Elephant;
+        }
+
+            .circle-container a {
+                display: block;
+                position: absolute;
+                top: 40%;
+                left: 40%;
+                width: 2em;
+                border-radius: 50%;
+                height: 2em;
+                line-height:2em;
+                margin: 1em;
+                background-color:aqua;
+                border:solid 1px black;
+                color: blue;
+                font-size:30px;
+                text-align:center;
+                padding-top:4px;
+            }
+            .menu-esq{
+                width:550px;
+                background-color:red;
+                padding:40px 20px 40px 20px;
+            }
+            .menu-dret{
+                width:550px;
+                background-color:red;
+                padding:40px 10px 40px 40px;
+            }
+            .titol{
+                font-size:25px;
+                font-weight:bold;
+                font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+                margin-top:60px;
+            }
+            .bt2{
+                width:160px;
+                height:80px;
+                background-color:aqua;
+                font-size:20px;
+                font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            }
+        .cuadre-temps {
+            background-color:white; 
+            border:2px solid black; 
+            width:150px;
+            height:80px;
+            font-size:50px;
+            text-align:center;
+            line-height:80px;
+            font-weight:bold;
+            margin-left:10px;
+        }
+
+            
+
+        .deg0 {
+            transform: translate(10em);
+        }
+        
+        .deg13 {
+            transform: rotate(13.846deg) translate(10em) rotate(-13.846deg);
+        }
+
+        .deg27 {
+            transform: rotate(27.692deg) translate(10em) rotate(-27.692deg);
+        }
+
+        .deg41 {
+            transform: rotate(41.538deg) translate(10em) rotate(-41.538deg);
+        }
+
+        .deg55 {
+            transform: rotate(55.384deg) translate(10em) rotate(-55.384deg);
+        }
+
+        .deg69 {
+            transform: rotate(69.23deg) translate(10em) rotate(-69.23deg);
+        }
+        .deg83 {
+            transform: rotate(83.076deg) translate(10em) rotate(-83.076deg);
+        }
+
+        .deg96 {
+            transform: rotate(96.992deg) translate(10em) rotate(-96.992deg);
+        }
+
+        .deg110 {
+            transform: rotate(110.768deg) translate(10em) rotate(-110.768deg);
+        }
+
+        .deg124 {
+            transform: rotate(124.614deg) translate(10em) rotate(-124.614deg);
+        }
+
+        .deg138 {
+            transform: rotate(138.46deg) translate(10em) rotate(-138.46deg);
+        }
+
+        .deg152 {
+            transform: rotate(152.036deg) translate(10em) rotate(-152.036deg);
+        }
+
+        .deg166{
+            transform: rotate(166.152deg) translate(10em) rotate(-166.152deg);
+        }
+
+        .deg179 {
+            transform: rotate(179.998deg) translate(10em) rotate(-179.998deg);
+        }
+
+        .deg193{
+            transform: rotate(193.844deg) translate(10em) rotate(-193.844deg);
+        }
+
+        .deg207 {
+            transform: rotate(207.68deg) translate(10em) rotate(-207.69deg);
+        }
+
+        .deg221 {
+            transform: rotate(221.536deg) translate(10em) rotate(-221.536deg);
+        }
+
+        .deg235 {
+            transform: rotate(235.382deg) translate(10em) rotate(-235.382deg);
+        }
+
+        .deg249 {
+            transform: rotate(249.228deg) translate(10em) rotate(-249.228deg);
+        }
+
+        .deg263 {
+            transform: rotate(263.074deg) translate(10em) rotate(-263.074deg);
+        }
+
+        .deg276 {
+            transform: rotate(276.92deg) translate(10em) rotate(-276.92deg);
+        }
+        .deg290 {
+            transform: rotate(290.766deg) translate(10em) rotate(-290.766deg);
+        }
+
+        .deg304 {
+            transform: rotate(304.612deg) translate(10em) rotate(-304.612deg);
+        }
+
+        .deg318 {
+            transform: rotate(318.458deg) translate(10em) rotate(-318.458deg);
+        }
+
+        .deg332 {
+            transform: rotate(332.304deg) translate(10em) rotate(-332.304deg);
+        }
+
+        .deg346 {
+            transform: rotate(346.15deg) translate(10em) rotate(-346.15deg);
+        }
+
+        .cuadre-text{            
+            text-align:left;
+            font-size:20px;
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+         }
+        #resposta{
+            width:265px;
+            height:50px;
+            font-size:20px;
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            text-align:left;
+        }
+        .bt{
+            width:125px;
+            height:30px;
+            margin-right:20px;
+            background-color:grey;
+        }
+        #separador {
+            width: 10px;
+            height: 80px;
+            font-size: 50px;
+            text-align: center;
+            line-height: 80px;
+            font-weight: bold;
+            margin-left:10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-esq">
+        <p class="titol" style="margin-top:20px; text-align:center;">INSTRUCCIONES DEL JUEGO</p>
+        <pre class="cuadre-text">
+Intenta responder todas las preguntas 
+
+correctamente,antes que se acabe el tiempo.
+
+Utiliza el botón de pasapalabra 
+
+para dejar la pregunta para el final.</pre>
+        
+        <m>
+            <button id="bt-start" class="bt2" onclick="start()">EMPEZAR</button>
+            <button id="bt-sortir" class="bt2" onclick="sortir()">SALIR</button>
+        </m>
+        <p class="titol" style="text-align:center">TIEMPO RESTANTE</p>
+        <div style="display:flex;margin-left:20px;margin-top:-30px">
+            <p id="minuts" class="cuadre-temps">10</p>
+            <p id="separador" >:</p>
+            <p id="segons" class="cuadre-temps">00</p>
+        </div>
+    </div>
+    <div  class="circle-container">
+        PASAPALABRA
+        <a id="g" class="deg0">G</a>
+        <a id="h" class="deg13">H</a>
+        <a id="i" class="deg27">I</a>
+        <a id="j" class="deg41">J</a>
+        <a id="k" class="deg55">K</a>
+        <a id="l" class="deg69">L</a>
+        <a id="m" class="deg83">M</a>
+        <a id="n" class="deg96">N</a>
+        <a id="o" class="deg110">O</a>
+        <a id="p" class="deg124">P</a>
+        <a id="q" class="deg138">Q</a>
+        <a id="r" class="deg152">R</a>
+        <a id="s" class="deg166">S</a>
+        <a id="t" class="deg179">T</a>
+        <a id="u" class="deg193">U</a>
+        <a id="v" class="deg207">V</a>
+        <a id="w" class="deg221">W</a>
+        <a id="x" class="deg235">X</a>
+        <a id="y" class="deg249">Y</a>
+        <a id="z" class="deg263">Z</a>
+        <a id="a" class="deg276">A</a>
+        <a id="b" class="deg290">B</a>
+        <a id="c" class="deg304">C</a>
+        <a id="d" class="deg318">D</a>
+        <a id="e" class="deg332">E</a>
+        <a id="f" class="deg346">F</a>
+    </div>
+    <div  class="menu-dret">
+        <p class="titol" style="margin-top:20px">PREGUNTA:</p>
+        <p id="pregunta" class="cuadre-text" style="color:white; line-height:30px; "></p>
+        <p class="titol">RESPUESTA:</p>
+        
+        <input type="text" id="resposta" name="resposta">
+        <div class="botons" style="display:flex; margin-top:10px; padding:2px; width:320px">
+            <button id="btEnviar" class="bt" onclick="enviar(index,partida,tipus)">ENVIAR</button>
+            <button id="btPassar" class="bt" onclick="pasapalabra(index,partida,tipus)">PASAPALABRA</button>
+        </div >
+        <div id="marcador">
+            <p id="titol-marcador" class="titol">RESULTADOS</p>
+            <p id="encerts" class="cuadre-text">Aciertos:0</p>
+            <p id="errors" class="cuadre-text">Errores:0</p>
+        </div>
+
+    </div>
+    <script>
+        
+        function start() {
+            preguntaF(index, partida, 1);
+            updateClock();
+            
+        } 
+        function sortir() {
+            totalSegons = 0;
+            minutsRestants = 0;
+            updateClock();
+            mostrar_final();
+        }
+            
+        function preguntaF(numIndex, numPartida, tipus) {
+            
+            if (tipus === 1) {
+
+                document.getElementById("pregunta").innerHTML = questionsGroup[numIndex].questionsA[numPartida].question;
+            } else {
+                
+                document.getElementById("pregunta").innerHTML = questionsGroup[preguntesPassadesAL[numIndex]].questionsA[numPartida].question;
+
+
+            }
+        }
+
+        function enviar(numIndex,numPartida,tipus) {
+            var resposta = document.getElementById("resposta").value;
+            if (tipus === 1) {
+                if (resposta === questionsGroup[numIndex].questionsA[numPartida].answer) {
+                    encerts++;
+                    document.getElementById("encerts").innerHTML = `Aciertos: ${encerts}`;
+                  
+                    document.getElementById(questionsGroup[numIndex].questionsA[numPartida].letter).style.backgroundColor = 'green';
+                    document.getElementById(questionsGroup[numIndex].questionsA[numPartida].letter).style.color = 'white';
+                    questionsGroup[numIndex].questionsA[numPartida].status = 1;
+
+
+
+                } else {
+                    errors++;
+                    document.getElementById("errors").innerHTML = `Errores: ${errors}`;
+                    document.getElementById(questionsGroup[numIndex].questionsA[numPartida].letter).style.backgroundColor = 'red';
+                    document.getElementById(questionsGroup[numIndex].questionsA[numPartida].letter).style.color = 'white';
+                    questionsGroup[numIndex].questionsA[numPartida].status = 3;
+                }
+            } else {
+                if (resposta === questionsGroup[preguntesPassadesAL[numIndex]].questionsA[numPartida].answer) {
+                    encerts++;
+                    document.getElementById("encerts").innerHTML = `Encerts: ${encerts}`;
+                    document.getElementById(questionsGroup[preguntesPassadesAL[numIndex]].questionsA[numPartida].letter).style.backgroundColor = 'green';
+                    document.getElementById(questionsGroup[preguntesPassadesAL[numIndex]].questionsA[numPartida].letter).style.color = 'white';
+                    questionsGroup[preguntesPassadesAL[numIndex]].questionsA[numPartida].status = 1;
+
+
+
+                } else {
+                    errors++;
+                    document.getElementById("errors").innerHTML = `Errors: ${errors}`;
+                    document.getElementById(questionsGroup[preguntesPassadesAL[numIndex]].questionsA[numPartida].letter).style.backgroundColor = 'red';
+                    document.getElementById(questionsGroup[preguntesPassadesAL[numIndex]].questionsA[numPartida].letter).style.color = 'white';
+                    questionsGroup[preguntesPassadesAL[numIndex]].questionsA[numPartida].status = 3;
+                }
+            }
+            index++;
+            if (tipus === 2 && index === preguntesPassadesAL.length) {
+                ronda_siguiente();
+            }
+            
+            if (index === 26) {
+                ronda_siguiente();
+            } else {
+                preguntaF(index, numPartida, tipus);
+            }
+            document.getElementById("resposta").value = "";
+        }
+
+        function pasapalabra(numIndex, numPartida, tipus) {
+            if (tipus === 1) {
+                document.getElementById(questionsGroup[numIndex].questionsA[numPartida].letter).style.backgroundColor = 'orange';
+                document.getElementById(questionsGroup[numIndex].questionsA[numPartida].letter).style.color = 'white';
+                questionsGroup[numIndex].questionsA[numPartida].status = 2;
+            } else {
+                document.getElementById(questionsGroup[preguntesPassadesAL[numIndex]].questionsA[numPartida].letter).style.backgroundColor = 'orange';
+                document.getElementById(questionsGroup[preguntesPassadesAL[numIndex]].questionsA[numPartida].letter).style.color = 'white';
+                questionsGroup[preguntesPassadesAL[numIndex]].questionsA[numPartida].status = 2;
+            }
+            
+            index++;
+            if (index === 26) {
+                ronda_siguiente();
+            } else {
+                preguntaF(index, numPartida, tipus);
+            }
+        }
+
+        function ronda_siguiente() {
+            tipus = 2;
+            ronda++;
+            if (ronda > 2) {
+                var l = preguntesPassadesAL.length;
+                var l2 = 0;
+                for (let i = 0; i < 26; i++) {
+                    if (questionsGroup[i].questionsA[partida].status === 2) {                        
+                       l2++;
+                    }
+                }
+                preguntesPassadesAL.splice((l2 - 1), (l - l2));
+                
+           }
+            
+            
+            var d = 0;
+            for (let i = 0; i < 26; i++) {
+
+                if (questionsGroup[i].questionsA[partida].status === 2) {
+                    preguntesPassadesAL[d] = i;
+                    d++;
+                }
+
+            }
+            index = 0;
+            
+
+            if (preguntesPassadesAL.length === 0) {
+                mostrar_final();                
+            } else {
+                preguntaF(index, partida, tipus);
+            }
+        } 
+        
+        function updateClock() {
+            document.getElementById('segons').innerHTML = totalSegons;
+            document.getElementById('minuts').innerHTML = minutsRestants;
+            if (totalSegons === 0) {
+                if (minutsRestants === 0) {
+                    mostrar_final();
+                } else {
+                    minutsRestants--;
+                    totalSegons = 59;
+                    updateClock();
+                }
+                
+            } else {
+                totalSegons -= 1;
+                setTimeout("updateClock()", 1000);
+            }
+        }
+        function mostrar_final() {
+            document.getElementById("titol-marcador").innerHTML = "RESULTADOS FINALES:";
+            document.getElementById("marcador").style.backgroundColor = "blue";
+            document.getElementById("marcador").style.color = "white";
+            document.getElementById("marcador").style.fontSize = "30px";
+            document.getElementById("encerts").style.fontSize = "30px";
+            document.getElementById("errors").style.fontSize = "30px";
+            document.getElementById("marcador").style.textAlign = "center";
+            document.getElementById("encerts").style.textAlign = "center";
+            document.getElementById("errors").style.textAlign = "center";
+            document.getElementById("marcador").style.padding = "5px";
+            document.getElementById("encerts").style.padding = "5px";
+            document.getElementById("errors").style.padding = "5px";
+            document.getElementById("pregunta").innerHTML = "";
+            document.getElementById("marcador").style.marginTop = "20px";
+            document.getElementById("marcador").style.border = "10px yellow solid";
+        }
+        
+        
+        
+
+       
+    </script>
+</body>
+</html>
